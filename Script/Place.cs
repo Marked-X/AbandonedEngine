@@ -67,7 +67,7 @@ namespace DragonQuest1.Script
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred,
+            spriteBatch.Begin(SpriteSortMode.BackToFront,
                               BlendState.AlphaBlend,
                               null, null, null, null,
                               _camera.Transform);

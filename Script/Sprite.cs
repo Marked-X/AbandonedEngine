@@ -10,19 +10,29 @@ namespace DragonQuest1
     {
         public enum Layer
         {
-            background,
-            entities,
-            foreground,
             ui,
+            foreground,
+            entities,
+            background,
             MAX_LAYER
         }
         private Dictionary<string, Animation> _animations;
         private AnimationManager _animationManager;
         private Vector2 _position;
+        private Layer _layerDepth;
         public TextureRegion TextureRegion { get; }
         public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
         public float Rotation { get; set; } = 0f;
-        public Layer LayerDepth { get; set; } = Layer.background;
+        public Layer LayerDepth
+        {
+            get => _layerDepth;
+            set 
+            {
+                _layerDepth = value;
+                if (_animationManager != null)
+                    _animationManager.Layer = (float)value / (float)Layer.MAX_LAYER;
+            }
+        }
         public Vector2 Position
         {
             get { return _position; }

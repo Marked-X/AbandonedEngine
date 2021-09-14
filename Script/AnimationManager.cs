@@ -8,6 +8,7 @@ namespace DragonQuest1
         private Animation _animation;
         private float _timer;
         public Vector2 Position;
+        public float Layer;
         public AnimationManager(Animation animation)
         {
             _animation = animation;
@@ -42,12 +43,19 @@ namespace DragonQuest1
         public void Draw(SpriteBatch spriteBach)
         {
             spriteBach.Draw(_animation.Texture,
-                            Position,
+                            new Rectangle((int)Position.X, 
+                                          (int)Position.Y,
+                                          _animation.FrameWidth, 
+                                          _animation.FrameHeight),
                             new Rectangle(_animation.CurrentFrame * _animation.FrameWidth + _animation.StartPosition,
                                           0,
                                           _animation.FrameWidth,
                                           _animation.FrameHeight),
-                            Color.White);
+                            Color.White,
+                            0,
+                            Vector2.One,
+                            SpriteEffects.None,
+                            Layer);
         }
     }
 }

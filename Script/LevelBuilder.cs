@@ -93,12 +93,12 @@ namespace DragonQuest1.Script
                     _triggerDebug = !_triggerDebug;
                 else if (InputManager.isKeyPressed(Keys.S) && InputManager.IsKeyDown(Keys.LeftShift))
                     _gridSnapping = !_gridSnapping;
-                else if (InputManager.isKeyPressed(Keys.Left))
+                else if (InputManager.isKeyPressed(Keys.Right))
                 {
                     if (_layer > 0)
                         _layer--;
                 }
-                else if (InputManager.isKeyPressed(Keys.Right))
+                else if (InputManager.isKeyPressed(Keys.Left))
                     if (_layer < (int)Sprite.Layer.MAX_LAYER - 1)
                         _layer++;
 

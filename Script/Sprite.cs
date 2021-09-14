@@ -8,13 +8,21 @@ namespace DragonQuest1
 {
     class Sprite
     {
+        public enum Layer
+        {
+            background,
+            entities,
+            foreground,
+            ui,
+            MAX_LAYER
+        }
         private Dictionary<string, Animation> _animations;
         private AnimationManager _animationManager;
         private Vector2 _position;
         public TextureRegion TextureRegion { get; }
         public SpriteEffects SpriteEffect { get; set; } = SpriteEffects.None;
         public float Rotation { get; set; } = 0f;
-        public float LayerDepth { get; set; } = 0f;
+        public Layer LayerDepth { get; set; } = Layer.background;
         public Vector2 Position
         {
             get { return _position; }
@@ -49,7 +57,7 @@ namespace DragonQuest1
                                  Rotation,
                                  new Vector2(TextureRegion.Width / 2f, TextureRegion.Height / 2f),
                                  SpriteEffect,
-                                 LayerDepth);
+                                 (float)LayerDepth/(float)Layer.MAX_LAYER);
             }
             else if (_animationManager != null)
                 _animationManager.Draw(spriteBatch);

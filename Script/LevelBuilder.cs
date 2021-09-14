@@ -21,6 +21,8 @@ namespace DragonQuest1.Script
         static private Texture2D _builderTexture;
         static private Level _level;
         static private bool _gridSnapping = true;
+        static private int _layer = 0;
+
         //tiles
         static private TextureAtlas _textureAtlas;
         static private List<Tile> _paletteTiles;
@@ -81,16 +83,24 @@ namespace DragonQuest1.Script
             {
                 if (InputManager.isKeyPressed(Keys.S) && InputManager.IsKeyDown(Keys.LeftControl))
                     Save();
-                if (InputManager.isKeyPressed(Keys.C) && InputManager.IsKeyDown(Keys.LeftControl))
+                else if (InputManager.isKeyPressed(Keys.C) && InputManager.IsKeyDown(Keys.LeftControl))
                     Clear();
-                if (InputManager.isKeyPressed(Keys.L) && InputManager.IsKeyDown(Keys.LeftControl))
+                else if (InputManager.isKeyPressed(Keys.L) && InputManager.IsKeyDown(Keys.LeftControl))
                     Load();
-                if (InputManager.isKeyPressed(Keys.R) && InputManager.IsKeyDown(Keys.LeftControl))
+                else if (InputManager.isKeyPressed(Keys.R) && InputManager.IsKeyDown(Keys.LeftControl))
                     CollisionManager.ReloadTiles(_level.Tiles);
-                if (InputManager.isKeyPressed(Keys.T) && InputManager.IsKeyDown(Keys.LeftControl))
+                else if (InputManager.isKeyPressed(Keys.T) && InputManager.IsKeyDown(Keys.LeftControl))
                     _triggerDebug = !_triggerDebug;
-                if (InputManager.isKeyPressed(Keys.S) && InputManager.IsKeyDown(Keys.LeftShift))
+                else if (InputManager.isKeyPressed(Keys.S) && InputManager.IsKeyDown(Keys.LeftShift))
                     _gridSnapping = !_gridSnapping;
+                else if (InputManager.isKeyPressed(Keys.Left))
+                {
+                    if (_layer > 0)
+                        _layer--;
+                }
+                else if (InputManager.isKeyPressed(Keys.Right))
+                    if (_layer < (int)Sprite.Layer.MAX_LAYER - 1)
+                        _layer++;
 
                 if (InputManager.isLeftClicked() && !_addingTile && !_addingTrigger)
                 {
@@ -110,7 +120,7 @@ namespace DragonQuest1.Script
                     {
                         if (InputManager.mousePosition.Intersects(tile.Bounds))
                         {
-                            _builderTile = new Tile(tile.Id, tile.sprite.TextureRegion, tile.Bounds, tile.Collidable);
+                            _builderTile = new Tile(tile.Id, tile.Sprite.TextureRegion, tile.Bounds, tile.Collidable);
                             _builderTileCollidable = false;
                             _addingTile = true;
                         }
@@ -131,7 +141,7 @@ namespace DragonQuest1.Script
                 {
                     _builderTile.Draw(spriteBatch);
                     //Tile debug
-                    spriteBatch.DrawString(_builderFont, "Collidable: " + _builderTileCollidable.ToString(), new Vector2(600, 90), Color.White);
+                    spriteBatch.DrawString(_builderFont, "Collidable: " + _builderTileCollidable.ToString(), new Vector2(600, 120), Color.White);
                 }
                 else if (_addingTrigger)
                 {
@@ -142,13 +152,14 @@ namespace DragonQuest1.Script
                                                    Game1.TILE_SIZE),
                                      Color.Green);
                     //Trigger debug
-                    spriteBatch.DrawString(_builderFont, "Target id: " + _triggerParam[0], new Vector2(600, 90), Color.White);
-                    spriteBatch.DrawString(_builderFont, "Pos X: " + _triggerParam[1], new Vector2(600, 120), Color.White);
-                    spriteBatch.DrawString(_builderFont, "Pos Y: " + _triggerParam[2], new Vector2(600, 150), Color.White);
+                    spriteBatch.DrawString(_builderFont, "Target id: " + _triggerParam[0], new Vector2(600, 120), Color.White);
+                    spriteBatch.DrawString(_builderFont, "Pos X: " + _triggerParam[1], new Vector2(600, 150), Color.White);
+                    spriteBatch.DrawString(_builderFont, "Pos Y: " + _triggerParam[2], new Vector2(600, 180), Color.White);
                 }
 
                 spriteBatch.DrawString(_builderFont, "MousePosX: " + InputManager.globalMousePosition.X.ToString(), new Vector2(600, 30), Color.White);
                 spriteBatch.DrawString(_builderFont, "MousePosY: " + InputManager.globalMousePosition.Y.ToString(), new Vector2(600, 60), Color.White);
+                spriteBatch.DrawString(_builderFont, "Layer: " + (Sprite.Layer)_layer, new Vector2(600, 90), Color.White);
 
                 //Drawing palette
                 spriteBatch.Draw(_builderTexture, new Rectangle(0, 0, _paletteTiles.Count * Game1.TILE_SIZE * 2, Game1.TILE_SIZE * 2), new Color(Color.White, 0.5f));
@@ -174,7 +185,7 @@ namespace DragonQuest1.Script
             string saved = "";
             foreach (Tile tile in _level.Tiles)
             {
-                saved += tile.Id + ", " + tile.Bounds.X + ", " + tile.Bounds.Y + ", " + tile.Collidable + ", " + tile.Rotation + ", " + tile.SpriteEffects + "\n";
+                saved += tile.Id + ", " + tile.Bounds.X + ", " + tile.Bounds.Y + ", " + tile.Collidable + ", " + tile.Rotation + ", " + tile.SpriteEffects + ", " + tile.Layer + "\n";
             }
             File.WriteAllText("Content/Levels/" + _level.Id, saved);
         }
@@ -193,7 +204,8 @@ namespace DragonQuest1.Script
                                               new Rectangle(int.Parse(temp[1]), int.Parse(temp[2]), Game1.TILE_SIZE, Game1.TILE_SIZE),
                                               bool.Parse(temp[3]),
                                               float.Parse(temp[4]),
-                                              (SpriteEffects)Enum.Parse(typeof(SpriteEffects), temp[5])));
+                                              (SpriteEffects)Enum.Parse(typeof(SpriteEffects), temp[5]),
+                                              (Sprite.Layer)int.Parse(temp[6])));
                 }
             }
         }
@@ -229,8 +241,11 @@ namespace DragonQuest1.Script
                 {
                     if (InputManager.globalMousePosition.Intersects(_level.Tiles[i].Bounds))
                     {
-                        _level.Tiles.RemoveAt(i);
-                        break;
+                        if(_level.Tiles[i].Layer == (Sprite.Layer)_layer)
+                        {
+                            _level.Tiles.RemoveAt(i);
+                            break;
+                        }
                     }
                 }
                 Point tilePos;
@@ -250,11 +265,12 @@ namespace DragonQuest1.Script
                 else
                     tilePos = new Point(InputManager.globalMousePosition.X - Game1.TILE_SIZE / 2, InputManager.globalMousePosition.Y - Game1.TILE_SIZE / 2);
                 _level.Tiles.Add(new Tile(_builderTile.Id,
-                                          _builderTile.sprite.TextureRegion,
+                                          _builderTile.Sprite.TextureRegion,
                                           new Rectangle(tilePos, new Point(Game1.TILE_SIZE, Game1.TILE_SIZE)), 
                                           _builderTileCollidable,
                                           _builderTile.Rotation,
-                                          _builderTile.SpriteEffects));
+                                          _builderTile.SpriteEffects,
+                                          (Sprite.Layer)_layer));
             }
             else if (InputManager.isRightClicked())
             {

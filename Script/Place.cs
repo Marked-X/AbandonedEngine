@@ -49,7 +49,8 @@ namespace DragonQuest1.Script
                                            new Rectangle(int.Parse(temp[1]), int.Parse(temp[2]), Game1.TILE_SIZE, Game1.TILE_SIZE),
                                            bool.Parse(temp[3]),
                                            float.Parse(temp[4]),
-                                           (SpriteEffects)Enum.Parse(typeof(SpriteEffects), temp[5])));
+                                           (SpriteEffects)Enum.Parse(typeof(SpriteEffects), temp[5]),
+                                           (Sprite.Layer)int.Parse(temp[6])));
                     }
                 }
             }
@@ -61,7 +62,7 @@ namespace DragonQuest1.Script
         public override void Update(GameTime gameTime)
         {
             hero.Update(gameTime);
-            _camera.Update(hero.position);
+            _camera.Update(hero.Position);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

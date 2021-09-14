@@ -22,7 +22,8 @@ namespace DragonQuest1.Script
         }
         public void ChangeState(Level level, Vector2 heroPos)
         {
-            _currentLevel.Exit();
+            if(_currentLevel != null)
+                _currentLevel.Exit();
             _currentLevel = level;
             _currentLevel.StartingHeroPosition = heroPos;
             _currentLevel.Initialize(_content, _camera);

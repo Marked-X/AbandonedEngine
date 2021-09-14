@@ -7,13 +7,14 @@ namespace DragonQuest1.Script
     {
         public int Id { get; set; }
         public bool Collidable { get; set; }
-        public SpriteEffects SpriteEffects { get { return sprite.SpriteEffect; } set { sprite.SpriteEffect ^= value; } }
+        public SpriteEffects SpriteEffects { get { return Sprite.SpriteEffect; } set { Sprite.SpriteEffect ^= value; } }
         public float Rotation
         {
-            get => sprite.Rotation;
-            set => sprite.Rotation = value;
+            get => Sprite.Rotation;
+            set => Sprite.Rotation = value;
         }
-        public Sprite sprite;
+        public Sprite Sprite { get; set; }
+        public Sprite.Layer Layer { get => Sprite.LayerDepth; set => Sprite.LayerDepth = value; }
         private Rectangle _bounds;
         public Rectangle Bounds
         {
@@ -21,27 +22,30 @@ namespace DragonQuest1.Script
             set
             {
                 _bounds = value;
-                sprite.Position = new Vector2(value.X + value.Width / 2, value.Y + value.Height / 2);
+                Sprite.Position = new Vector2(value.X + value.Width / 2, value.Y + value.Height / 2);
             }
         }
-        public Tile(int id, TextureRegion texture, Rectangle bounds, bool collidable, float rotation, SpriteEffects effect)
+        public Tile(int id, TextureRegion texture, Rectangle bounds, bool collidable, float rotation, SpriteEffects effect, Sprite.Layer layer)
         {
             Id = id;
-            sprite = new Sprite(texture);
+            Sprite = new Sprite(texture);
             Bounds = bounds;
             Collidable = collidable;
             Rotation = rotation;
             SpriteEffects = effect;
+            Layer = layer;
         }
+        public Tile(int id, TextureRegion texture, Rectangle bounds, bool collidable, float rotation, SpriteEffects effect)
+            : this(id, texture, bounds, collidable, rotation, effect, Sprite.Layer.background) { }
         public Tile(int id, TextureRegion texture, Rectangle bounds, bool collidable, float rotation)
-            :this(id, texture, bounds, collidable, rotation, SpriteEffects.None) { }
+            : this(id, texture, bounds, collidable, rotation, SpriteEffects.None) { }
         public Tile(int id, TextureRegion texture, Rectangle bounds, bool collidable)
-            : this(id, texture, bounds, collidable, 0f, SpriteEffects.None) { }
+            : this(id, texture, bounds, collidable, 0f) { }
         public Tile(int id, TextureRegion texture, Rectangle bounds)
-            : this(id, texture, bounds, false, 0f, SpriteEffects.None) { }
+            : this(id, texture, bounds, false) { }
         public void Draw(SpriteBatch spriteBatch)
         {
-            sprite.Draw(spriteBatch);
+            Sprite.Draw(spriteBatch);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace DragonQuest1.Script
             Rectangle temp = new Rectangle(entity.Bounds.X + (int)velocity.X, entity.Bounds.Y + (int)velocity.Y, 16, 16);
             if(_tiles != null)    
                 foreach (Tile tile in _tiles)
-                    if (Vector2.Distance(entity.Sprite.Position, tile.sprite.Position) < 32)
+                    if (Vector2.Distance(entity.Sprite.Position, tile.Sprite.Position) < 32)
                         if (temp.Intersects(tile.Bounds))
                             return false;
             if(_entities != null)

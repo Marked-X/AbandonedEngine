@@ -36,6 +36,7 @@ namespace DragonQuest1.Script
                 {"Left", new Animation(content.Load<Texture2D>("Sprites/Hero"), 2, 16, 16, 64) },
                 {"Right",  new Animation(content.Load<Texture2D>("Sprites/Hero"), 2, 16, 16, 96)},
             });
+            Sprite.LayerDepth = Sprite.Layer.entities;
             Bounds = new Rectangle(0, 0, 16, 16);
             Position = Vector2.Zero;
         }

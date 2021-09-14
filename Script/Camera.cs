@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,6 +51,11 @@ namespace DragonQuest1.Script
         }
         public void Update(Vector2 position)
         {
+            if (InputManager.isKeyPressed(Keys.Up))
+                Zoom++;
+            else if (InputManager.isKeyPressed(Keys.Down))
+                Zoom--;
+
             _centre = new Vector2(position.X + Game1.TILE_SIZE / 2, position.Y + Game1.TILE_SIZE / 2);
 
             _transform = Matrix.CreateTranslation(new Vector3(-_centre.X, -_centre.Y, 0)) *

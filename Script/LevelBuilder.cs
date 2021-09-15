@@ -66,16 +66,23 @@ namespace DragonQuest1.Script
                                             Game1.TILE_SIZE * 4,
                                             Game1.TILE_SIZE * 2);
 
+            //------------
+
         }
-        static public void StartBuilder(Level level)
+        static public void StartBuilder(Level level, CommandList commands)
         {
             _level = level;
+            commands.SwitchBuilder += c_SwitchBuilder;
         }
         static public void SwitchBuilder()
         {
             if (_builderActive)
                 _builderActive = false;
             else _builderActive = true;
+        }
+        static public void c_SwitchBuilder(object sender, EventArgs e)
+        {
+            _builderActive = !_builderActive;
         }
         static public void Update()
         {

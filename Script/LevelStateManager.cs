@@ -15,10 +15,12 @@ namespace DragonQuest1.Script
         private Level _currentLevel;
         private ContentManager _content;
         private Camera _camera;
+        private CommandList _commandList;
         public LevelStateManager(ContentManager content, Viewport viewport)
         {
             _content = content;
             _camera = new Camera(viewport);
+            _commandList = new CommandList();
         }
         public void ChangeState(Level level, Vector2 heroPos)
         {
@@ -27,10 +29,11 @@ namespace DragonQuest1.Script
             _currentLevel = level;
             _currentLevel.StartingHeroPosition = heroPos;
             _currentLevel.Initialize(_content, _camera);
-            LevelBuilder.StartBuilder(_currentLevel);
+            LevelBuilder.StartBuilder(_currentLevel, _commandList);
         }
         public void Update(GameTime gameTime)
         {
+            _commandList.Update();
             _currentLevel.Update(gameTime);
         }
         public void Draw(SpriteBatch spriteBatch)

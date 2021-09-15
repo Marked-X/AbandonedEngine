@@ -40,9 +40,9 @@ namespace DragonQuest1
 
             InputManager.Update(gameTime);
             _levelStateManager.Update(gameTime);
-            if (InputManager.isKeyPressed(Keys.F))
+            /*if (InputManager.isKeyPressed(Keys.F))
                 LevelBuilder.SwitchBuilder();
-
+            */
             LevelBuilder.Update();
 
             base.Update(gameTime);
